@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+
+    <body style="background-color:snow">
+        <div id = "dataForm" style="padding: 10 0 0 10">
+            <form class = "form-inline">
+                <label> Enter Data: </label>
+                <input type="text" id="userData" placeholder="[[100,200],[400,800],...]" style="width:1000px"></input>
+                <button type="button" class="btn btn-primary btn-sm" onclick="loadData()">Visualize</button>
+            </form>
+        </div>
+        <hr>
+        <div class = "options" style="padding: 10 0 0 10">
+            <form>
+                <label> Sort by: </label>    
+                <label class="radio-inline active">
+                    <input type="radio" name="optradio" checked="" onclick="sortByDefault()"> No sort </input>
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="optradio" onclick="sortByStart()"> start </input>
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="optradio" onclick="sortByEnd()"> end </input>
+                </label>
+            </form>
+        </div>
+    
+        <script   src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
+        <script src=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js></script>
+        <script src="mainjs.js"></script>
+    </body>
+</html>
