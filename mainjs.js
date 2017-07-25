@@ -6,42 +6,69 @@ var border = 1;
 var bordercolor = "black";
 var rectHeight = 20;
 
-
-
 var defaultData = data.map(function(arr) {
     return arr.slice();
 });
 
-var rectPos = (function(d){
-        ret = [];
-        for (var i = 0; i < data.length; i++){
-            ret.push([d[i], i*rectHeight + i]);
+
+
+var processData = function(){
+        /*return array of objects*/
+    var dataObj = [];
+    for (var i = 0; i<data.length; i ++){
+        dataObj[i] = {
+            start:data[i][0],
+            end:data[i][1],
+            id:"id_"+i,
+            xpos:data[i][0],
+            ypos:i*rectHeight + i,
+            width:data[i][1] - data[i][0],
+            overlapping:(function(){
+                var overlapping_nodes = [];
+                for (var j = 0; j<data.length; j++){
+                    if (i == j){continue}
+                    else if ((data[i][0]<data[j][0] && data[j][0]<data[i][1]) || 
+                             (data[i][0]<data[j][1] && data[j][1]<data[i][1]) ||
+                             (data[i][0]>=data[j][0] && data[i][1]<=data[j][1])){
+                         overlapping_nodes.push("id_"+j);
+                    }
+                }
+                return overlapping_nodes;
+            })()
         }
-        return ret;
-    })(data);
+    }
+
+    //console.log(dataObj);
+
+    return dataObj;
+};
+
+var handleMouseOver = function(obj){
+    d3.select(this).attr("fill", "orange");
+    for (var i = 0; i<obj.overlapping.length; i++){
+        d3.select("#"+obj.overlapping[i]).attr("fill", "orange");
+    }
+};
+
+var handleMouseOut = function(obj){
+    d3.selectAll("rect").attr("fill", "black");
+};
 
 var addData = function(){
-    var rectPos = (function(d){
-        ret = [];
-        for (var i = 0; i < data.length; i++){
-            ret.push([d[i], i*rectHeight + i]);
-        }
-        return ret;
-    })(data);
-
+    dataObj = processData();
     var rescale = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d){return d[1] - d[0];})])
-        .range([0, d3.min([500, d3.max(data, function(d){return d[1];})])]);
+        .domain([0, d3.max(dataObj, function(d){return d['end'] - d['start'];})])
+        .range([0, d3.min([500, d3.max(dataObj, function(d){return d['end'];})])]);
 
-    rescaled_max_X= rescale(d3.max(data, function(d){return d[1];}));
-    var xscale = d3.scaleLinear().domain([0,d3.max(data, function(d){return d[1];})]).range([0,rescaled_max_X]);
+    rescaled_max_X= rescale(d3.max(dataObj, function(d){return d['end'];}));
+    var xscale = d3.scaleLinear().domain([0,d3.max(dataObj, function(d){return d['end'];})]).range([0,rescaled_max_X]);
     var axis = d3.axisBottom(xscale);
 
 
     var svg = d3.select("body")
         .append("svg")
         .attr("width", rescaled_max_X + 50)
-        .attr("height", (rectHeight + 10) * data.length)
+        .attr("height", (rectHeight + 10) * dataObj.length)
         .attr("transform", "translate(20,20)");
         
     var container = svg.append("g")
@@ -49,7 +76,7 @@ var addData = function(){
         .attr("transform", "translate(20,20)");
 
     var g = container.selectAll("g")
-        .data(rectPos)
+        .data(dataObj)
         .enter()
         .append("g")
 
@@ -57,23 +84,27 @@ var addData = function(){
     g.append("text")
 
     g.selectAll("rect")
-        .attr("x", function(d){return rescale(d[0][0]);})
-        .attr("y", function(d){ console.log(d); return d[1];})
+        .attr("x", function(d){return rescale(d['xpos']);})
+        .attr("y", function(d){return d['ypos'];})
         .attr("height", rectHeight)
-        .attr("width", function(d){return rescale(d[0][1] - d[0][0]);})
-        .attr("fill", "black");
+        .attr("width", function(d){return rescale(d['width']);})
+        .attr("fill", "black")
+        .attr("id", function(d){return d['id'];})
+        .on("mouseover", handleMouseOver)
+        .on("mouseout", handleMouseOut);
 
     g.selectAll("text")
-        .attr("x",function(d){return rescale(d[0][0] + 5);})
-        .attr("y", function(d, i){return d[1] + 15})
-        .attr("fill", "snow")
+        .attr("x",function(d){return rescale(d['xpos'] + 5);})
+        .attr("y", function(d){return d['ypos'] + 15})
+        .attr("fill", "crimson")
         .attr("font-size", "12")
-        .text(function(d){return "("+d[0][0] +","+d[0][1]+")"});
+        .attr("font-weight", "bold")
+        .text(function(d){return "("+d['start'] +","+d['end']+")"});
         ;   
 
     axis = container.append("g")
         .attr("class", "x-axis")
-        .attr("transform", "translate(0," + ((rectHeight + 1) * data.length) +")")
+        .attr("transform", "translate(0," + ((rectHeight + 1) * dataObj.length) +")")
         .call(axis);
 
 
@@ -126,4 +157,26 @@ var loadData = function(){
         return arr.slice();
     });
     updateChart();
+}
+
+var randInt = function(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+var randomData = function(){
+    var number_of_data = randInt(3, 20);
+    var arr = [];
+    var s;
+    for (var i = 0; i<number_of_data; i++){
+        s = randInt(0,1000);
+        arr.push([s, s+randInt(0, 1000)]); 
+    }
+
+    data = arr.map(function(arr) {
+        return arr.slice();
+    });
+    defaultData = arr.map(function(arr) {
+        return arr.slice();
+    });
+    updateChart();
+
 }

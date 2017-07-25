@@ -5,11 +5,21 @@
     </head>
 
     <body style="background-color:snow">
+        <div class="jumbotron", style="padding:20px">
+            <h2> Interval Scheduling Visualizer </h2>
+            <ul>
+                <li><small> Enter your own data as array or arrays or randomly generate data .</small> </li>
+                <li><small> Sort by start time, end time or default data ordering. </small></li>
+                <li><small> Hover to see overlapping intervals. </small></li>
+            </ul>
+        </div>
+
         <div id = "dataForm" style="padding: 10 0 0 10">
             <form class = "form-inline">
                 <label> Enter Data: </label>
                 <input type="text" id="userData" placeholder="[[100,200],[400,800],...]" style="width:1000px"></input>
                 <button type="button" class="btn btn-primary btn-sm" onclick="loadData()">Visualize</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="randomData()">Random Data</button>
             </form>
         </div>
         <hr>
