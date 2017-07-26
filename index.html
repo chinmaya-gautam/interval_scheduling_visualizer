@@ -11,6 +11,7 @@
                 <li><small> Enter your own data as array or arrays or randomly generate data .</small> </li>
                 <li><small> Sort by start time, end time or default data ordering. </small></li>
                 <li><small> Hover to see overlapping intervals. </small></li>
+                <li><small> Choose between optimal interval schedule and minimum resource interval partiotions </small></li>
             </ul>
         </div>
 
@@ -27,13 +28,20 @@
             <form>
                 <label> Sort by: </label>    
                 <label class="radio-inline active">
-                    <input type="radio" name="optradio" checked="" onclick="sortByDefault()"> No sort </input>
+                    <input type="radio" name="optradio" id = "rad_0" checked="" onclick="sortByDefault()"> No sort </input>
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="optradio" onclick="sortByStart()"> start </input>
+                    <input type="radio" name="optradio" id = "rad_1" onclick="sortByStart()"> start </input>
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="optradio" onclick="sortByEnd()"> end </input>
+                    <input type="radio" name="optradio" id = "rad_2" onclick="sortByEnd()"> end </input>
+                </label>
+                <br />
+                <label class="radio-inline">
+                    <input type="radio" name="optradio" id = "rad_3" onclick="intervalPartition()"> Interval Partition </input>
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="optradio" id = "rad_4" onclick="intervalSchedule()"> Interval Schedule </input>
                 </label>
             </form>
         </div>
